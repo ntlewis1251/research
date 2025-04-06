@@ -1,3 +1,5 @@
+import numpy  as np
+
 def get_key(filename:str, line:int)->str:
     """
     Goes into my super-secret api text file and gets my keys yurrr.
