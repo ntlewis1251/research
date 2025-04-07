@@ -1,7 +1,7 @@
 import numpy  as np
 import requests
-import os
 import lsdtopytools as lsd
+import utm
 
 def get_key(filename:str, line:int)->str:
     """
@@ -15,16 +15,6 @@ def get_key(filename:str, line:int)->str:
     with open(filename, 'r') as file:
         lines = file.readlines()
     return lines[line-1]
-
-def generate_ksn():
-    get_topo()
-    mydem = lsd.LSDDEM(path = '/sciclone/home/ntlewis/research/working_files/data/', file_name = get_topo.name)
-    mydem.PreProcessing(filling = True, carving = True, minimum_slope_for_filling = 0.0001)
-    mydem.CommonFlowRoutines()
-    mydem.ExtractRiverNetwork( method = "area_threshold", area_threshold_min = 1500)
-    #mydem.DefineCatchment( method="from_XY", X_coords = [532297,521028], Y_coords = [6188085,6196305], test_edges = False)
-    #mydem.GenerateChi(theta = 0.4)
-    #mydem.ksn_MuddEtAl2014(target_nodes=70, n_iterations=60, skip=1, nthreads = 1)
 
 def make_dir(name):
     return '/sciclone/home/ntlewis/research/working_files/data/' + name
@@ -44,3 +34,17 @@ def get_topo():
     get_topo.dir = make_dir(name=get_topo.name)
     downloader(bounds=bounds, dir=get_topo.dir)
     get_topo.bounds = downloader.bounds
+
+def generate_ksn():
+    get_topo()
+    bounds= get_topo.bounds
+    nor_ea_max = list(utm.from_latlon(float(bounds[0]),float(bounds[1]))[0:2])
+    nor_ea_min = list(utm.from_latlon(float(bounds[2]),float(bounds[3]))[0:2])
+    mydem = lsd.LSDDEM(path = '/sciclone/home/ntlewis/research/working_files/data/', file_name = get_topo.name)
+    mydem.PreProcessing(filling = True, carving = True, minimum_slope_for_filling = 0.0001)
+    mydem.CommonFlowRoutines()
+    mydem.ExtractRiverNetwork( method = "area_threshold", area_threshold_min = 1500)
+    mydem.DefineCatchment( method="from_XY", X_coords = [nor_ea_max[1],nor_ea_min[1]], Y_coords = [nor_ea_max[0],nor_ea_min[0]], test_edges = False)
+    mydem.GenerateChi(theta = 0.4)
+    mydem.ksn_MuddEtAl2014(target_nodes=70, n_iterations=60, skip=1, nthreads = 1)
+    return mydem.df_ksn
