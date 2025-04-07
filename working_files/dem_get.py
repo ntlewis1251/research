@@ -7,8 +7,8 @@ def make_dir(name):
 
 def get_topo(bounds:list, dir:str):
     keys = ['north','east','south','west']
-    bounds=[bounds[0],bounds[1],str(float(bounds[0])-0.125),str(float(bounds[1])-0.125)]
-    dic = dict(zip(keys, bounds))
+    get_topo.bounds=[bounds[0],bounds[1],str(float(bounds[0])-0.125),str(float(bounds[1])-0.125)]
+    dic = dict(zip(keys, get_topo.bounds))
     url = f'https://portal.opentopography.org/API/usgsdem?datasetName=USGS10m&south={dic["south"]}&north={dic["north"]}&west={dic["west"]}&east={dic["east"]}&outputFormat=GTiff&API_Key={get_key("/sciclone/home/ntlewis/research/API_key.txt", 2)}'
     response = requests.get(url)
     with open(dir,'wb') as file:
