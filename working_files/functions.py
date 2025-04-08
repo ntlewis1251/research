@@ -38,13 +38,13 @@ def get_topo():
 def generate_ksn():
     get_topo()
     bounds= get_topo.bounds
-    nor_ea_max = list(utm.from_latlon(float(bounds[0]),float(bounds[1]))[0:2])
-    nor_ea_min = list(utm.from_latlon(float(bounds[2]),float(bounds[3]))[0:2])
-    mydem = lsd.LSDDEM(path = '/sciclone/home/ntlewis/research/working_files/data/', file_name = get_topo.name)
-    mydem.PreProcessing(filling = True, carving = True, minimum_slope_for_filling = 0.0001)
+    #nor_ea_max = list(utm.from_latlon(float(bounds[0]),float(bounds[1]))[0:2])
+    #nor_ea_min = list(utm.from_latlon(float(bounds[2]),float(bounds[3]))[0:2])
+    mydem = lsd.LSDDEM(path = '/sciclone/home/ntlewis/research/working_files/data/', file_name = get_topo.name, already_preprocessed = False)
+    mydem.PreProcessing()
     mydem.CommonFlowRoutines()
-    mydem.ExtractRiverNetwork( method = "area_threshold", area_threshold_min = 1500)
-    mydem.DefineCatchment( method="from_XY", X_coords = [nor_ea_max[1],nor_ea_min[1]], Y_coords = [nor_ea_max[0],nor_ea_min[0]], test_edges = False)
-    mydem.GenerateChi(theta = 0.4)
-    mydem.ksn_MuddEtAl2014(target_nodes=70, n_iterations=60, skip=1, nthreads = 1)
+    mydem.ExtractRiverNetwork( method = "area_threshold", area_threshold_min = 300)
+    mydem.DefineCatchment( method = "main_basin")
+    mydem.GenerateChi(theta = 0.28, A_0 = 1)
+    mydem.ksn_MuddEtAl2014(target_nodes=30, n_iterations=60, skip=1, nthreads = 1)
     return mydem.df_ksn
