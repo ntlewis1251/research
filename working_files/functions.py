@@ -16,8 +16,7 @@ def get_key(filename:str, line:int)->str:
         lines = file.readlines()
     return lines[line-1]
 
-def make_dir(name):
-    return '/sciclone/home/ntlewis/research/working_files/data/' + name
+make_dir = lambda name, : '/sciclone/home/ntlewis/research/working_files/data/' + name
 
 def downloader(bounds:list, dir:str):
     keys = ['north','east','south','west']
