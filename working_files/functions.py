@@ -6,6 +6,7 @@ import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd
 from osgeo import gdal
+import rasterio
 
 def get_key(filename:str, line:int)->str:
     """
@@ -46,6 +47,13 @@ def generate_ksn(north, east, name):
     output_raster = f'/sciclone/home/ntlewis/research/working_files/data/{name}'
     warp = gdal.Warp(output_raster,input_raster, dstSRS='EPSG:32617')
     warp = None #close
+    raster=rasterio.open(f'/sciclone/home/ntlewis/research/working_files/data/{name}')
+    profile = raster.profile
+    profile.update(nodata=None)
+    with rasterio.open(f'/sciclone/home/ntlewis/research/working_files/data/{name}', 
+                  mode="w", 
+                  **profile,) as update_dataset:
+        update_dataset.write(raster.read(1), 1)
 
     # Assigning to LSDDEM object for analysis, plotting DEM for debugging
     mydem = lsd.LSDDEM(path = '/sciclone/home/ntlewis/research/working_files/data/', file_name = get_topo.name, already_preprocessed = False)
