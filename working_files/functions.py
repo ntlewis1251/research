@@ -108,10 +108,8 @@ def make_fig1(df_list, _95_dict, q2_dict, color_list, bounds_list, ax):
     for ax in ax.flat:
         key = list(_95_dict)[n]
         plot_name = key + 'plot'
-        plot_name = sns.histplot(data=df_list[n][df_list[n].m_chi>_95_dict[key]], x='elevation', ax=ax, color=color_list[n], binwidth=10)
-        plot_name.set_xlim(0,2000)
-        plot_name.text(x=1500,y=60, s=bounds_list[n], fontsize=14, c=color_list[n])
-        total_stream_plot = sns.histplot(data=df_list[n], x='elevation', ax=ax, binwidth=10, color=color_list[n], alpha=0.3)
+        plot_name = sns.histplot(data=df_list[n][df_list[n].m_chi>_95_dict[key]], x='elevation', ax=ax, color=color_list[n], binwidth=10, shrink=0.8)
+        total_stream_plot = sns.histplot(data=df_list[n], x='elevation', ax=ax, binwidth=10, color=color_list[n], alpha=0.3, shrink=0.8)
         ax.axvline(x=q2_dict[key], color='k', linestyle=':')
         ax.axvline(x=df_list[n][df_list[n].m_chi>_95_dict[key]].elevation.describe()['50%'], color=color_list[n], linestyle=':')
         n+=1
