@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from osgeo import gdal
 import rasterio
+import seaborn as sns
 
 def get_key(filename:str, line:int)->str:
     """
@@ -102,3 +103,14 @@ def generate_ksn(north, east, name):
     gdf = gdf[(gdf.m_chi >= 0) & (gdf.m_chi <= 100)]
     return gdf, mydem
 
+def make_fig1(df_list, _95_dict, q2_dict, color_list, bounds_list, ax):
+    n=0
+    for ax in ax.flat:
+        key = list(_95_dict)[n]
+        plot_name = key + 'plot'
+        plot_name = sns.histplot(data=df_list[n][df_list[n].m_chi>_95_dict[key]], x='elevation', ax=ax, color=color_list[n], binwidth=10)
+        plot_name.set_xlim(0,2000)
+        plot_name.text(x=1500,y=60, s=bounds_list[n], fontsize=14, c='g')
+        total_stream_plot = sns.histplot(data=df_list[n], x='elevation', ax=ax, binwidth=10, color=color_list[n], alpha=0.3)
+        ax.axvline(x=q2_dict[key], color='black')
+        n+=1

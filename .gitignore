@@ -162,3 +162,4 @@ cython_debug/
 
 # Private shit
 API_key.txt
+data/
