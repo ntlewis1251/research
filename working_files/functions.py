@@ -108,3 +108,15 @@ def generate_ksn(north, east, name):
     gdf = gpd.GeoDataFrame(mydem.df_ksn, geometry=gpd.points_from_xy(mydem.df_ksn.x,mydem.df_ksn.y))
     gdf = gdf[(gdf.m_chi >= 0) & (gdf.m_chi <= 100)]
     return gdf, mydem
+
+def relief_dem():
+    """
+    in- DEM
+    Creates new folder in data dir, places new DEMs (subsections of OG) in there
+    makes df with all data.
+    Deletes new folder.
+    df can be stored in vars.
+    https://leafmap.org/notebooks/77_split_raster/
+    returns- df with each square, bounding coords of square, relief in that area.
+    """
+    pass
