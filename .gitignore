@@ -162,4 +162,5 @@ cython_debug/
 
 # Private shit
 API_key.txt
-data/
+data
+figures.ipynb

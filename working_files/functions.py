@@ -25,6 +25,9 @@ def get_key(filename:str, line:int)->str:
 make_dir = lambda name, : '/sciclone/home/ntlewis/research/working_files/data/' + name
 
 def downloader(bounds:list, dir:str):
+    """
+    Takes in NE and SW bounding coordinates as well as a directory name.  Downloads a DEM from opentopo and places it in the chosen directory.
+    """
     keys = ['north','east','south','west']
     downloader.bounds=[bounds[0],bounds[1],str(float(bounds[0])-0.125),str(float(bounds[1])-0.125)]
     dic = dict(zip(keys, downloader.bounds))
@@ -34,6 +37,9 @@ def downloader(bounds:list, dir:str):
         file.write(response.content)
 
 def get_topo(north,east,name):
+    """
+    Runs downloader & make dir function.  For use in jupyter notebooks.  For a self-contained script, visit ___.
+    """
     bounds = list([north,east])
     get_topo.name = name
     get_topo.dir = make_dir(name=get_topo.name)
