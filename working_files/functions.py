@@ -108,14 +108,3 @@ def generate_ksn(north, east, name):
     gdf = gpd.GeoDataFrame(mydem.df_ksn, geometry=gpd.points_from_xy(mydem.df_ksn.x,mydem.df_ksn.y))
     gdf = gdf[(gdf.m_chi >= 0) & (gdf.m_chi <= 100)]
     return gdf, mydem
-
-def make_fig1(df_list, _95_dict, q2_dict, color_list, bounds_list, ax):
-    n=0
-    for ax in ax.flat:
-        key = list(_95_dict)[n]
-        plot_name = key + 'plot'
-        plot_name = sns.histplot(data=df_list[n][df_list[n].m_chi>_95_dict[key]], x='elevation', ax=ax, color=color_list[n], binwidth=10, shrink=0.8)
-        total_stream_plot = sns.histplot(data=df_list[n], x='elevation', ax=ax, binwidth=10, color=color_list[n], alpha=0.3, shrink=0.8)
-        ax.axvline(x=q2_dict[key], color='k', linestyle=':')
-        ax.axvline(x=df_list[n][df_list[n].m_chi>_95_dict[key]].elevation.describe()['50%'], color=color_list[n], linestyle=':')
-        n+=1
