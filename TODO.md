@@ -4,4 +4,4 @@
 [] Storage container for DEMS, storage container for generated CSVs.\
 [] Script for creating heatmap type figure.\
 [] More robust rock type IDer.\
-[] 
+[] Make relief map with 1km radius.
