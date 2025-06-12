@@ -109,6 +109,32 @@ def generate_ksn(north, east, name):
     gdf = gdf[(gdf.m_chi >= 0) & (gdf.m_chi <= 100)]
     return gdf, mydem
 
+def rast_to_df(rast):
+    """
+    for rasters of equal len and width.
+    """
+    transform = rast.transform
+    elev = rast.read(1)
+    row, col = rast.shape
+    x, y = np.meshgrid(np.arange(col), np.arange(row))
+    lon, lat = rasterio.transform.xy(transform, y, x)
+    df = pd.DataFrame({'lon':np.array(lon).flatten(), 'lat':np.array(lat).flatten(), 'elevation':np.array(elev).flatten(),'x':x.flatten(), 'y':y.flatten()})
+
+    # Now calculating relief for each 1km x 1km square
+    i=0
+    df_relief = pd.DataFrame(columns = ['poly', 'relief', 'lat_max', 'lon_max', 'lat_min', 'lon_min'])
+    
+    for x in range(100, rast.shape[1], 100):
+        for y in range(100, rast.shape[1], 100):
+            poly_df = df.loc[df.x<=x].loc[df.x>=x-100].loc[df.y<=y].loc[df.y>=y-100]
+            lon_max, lat_max = rasterio.transform.xy(transform, y, x)
+            lon_min, lat_min = rasterio.transform.xy(transform, y-100, x-100)
+            df_relief.loc[i] = [('sq_'+str(x)+'_'+str(y)), (poly_df.elevation.max()-poly_df.elevation.min()),
+                                 np.array(lat_max).flatten(), np.array(lon_max).flatten(), np.array(lat_min).flatten(), np.array(lon_min).flatten()]
+            i+=1
+    df_relief['rank'] = df_relief['relief'].rank(pct=True)
+    return df, df_relief
+
 def df_relief(dem, pix:int):
     """
     https://rvt-py.readthedocs.io/en/latest/examples/rvt_vis_example.html
