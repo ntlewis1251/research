@@ -49,6 +49,7 @@ def get_topo(north,east,name):
 def generate_ksn(north, east, name):
     get_topo(north=north, east=east, name=name)
     # Reprojecting
+    
     file = f'/sciclone/home/ntlewis/research/working_files/data/{name}'
     input_raster = gdal.Open(file)
     output_raster = f'/sciclone/home/ntlewis/research/working_files/data/{name}'
@@ -65,6 +66,7 @@ def generate_ksn(north, east, name):
     # Assigning to LSDDEM object for analysis, plotting DEM for debugging
     mydem = lsd.LSDDEM(path = '/sciclone/home/ntlewis/research/working_files/data/', file_name = get_topo.name, already_preprocessed = False)
     mydem.PreProcessing()
+
     # fig, ax = plt.subplots(figsize = (9,9))
     # lsd.quickplot.get_basemap(mydem , cmap = "gist_earth", hillshade = True,
 	#     alpha_hillshade = 0.35, cmin = None, cmax = None,
@@ -73,6 +75,7 @@ def generate_ksn(north, east, name):
     
     # Calculating and plotting flow routines
     mydem.CommonFlowRoutines()
+
     # fig, ax = plt.subplots(figsize = (9,9))
     # cb = ax.imshow(np.log10(mydem.cppdem.get_DA_raster()), extent = mydem.extent, vmin = 2, vmax = 9, cmap = "viridis")
     # plt.colorbar(cb, label = "Log Drainage Area")
@@ -85,6 +88,7 @@ def generate_ksn(north, east, name):
 
     # KSN! If A_0 == 1, the parameter m_chi == KSN
     mydem.GenerateChi(theta = 0.28, A_0 = 1)
+
     # fig, ax = lsd.quickplot.get_basemap(mydem , figsize = (9,9), cmap = "gist_earth", hillshade = True,
 	#     alpha_hillshade = 1, cmin = None, cmax = None,
 	#     hillshade_cmin = 0, hillshade_cmax = 1, colorbar = False,
@@ -134,9 +138,3 @@ def rast_to_df(rast):
             i+=1
     df_relief['rank'] = df_relief['relief'].rank(pct=True)
     return df, df_relief
-
-def df_relief(dem, pix:int):
-    """
-    https://rvt-py.readthedocs.io/en/latest/examples/rvt_vis_example.html
-    """
-    pass
